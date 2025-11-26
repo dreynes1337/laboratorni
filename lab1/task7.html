@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Склад товарів</title>
+    <script>
+      const productData = [
+        { name: "Мишка", quantity: 105, cost: 100 },
+        { name: "Іграшка", quantity: 50, cost: 150 },
+        { name: "Ліхтар", quantity: 200, cost: 45 },
+      ];
+
+      // Display table for selected products in Form 1 and calculate total cost
+      function displayTableAndCalculateTotal() {
+        let total = 0;
+        let tableContent = `
+        <table border="1" cellpadding="5" cellspacing="0">
+          <tr>
+            <th>Назва товару</th>
+            <th>Кількість (шт.)</th>
+            <th>Ціна за одиницю (грн)</th>
+            <th>Загальна вартість (грн)</th>
+          </tr>`;
+
+        // Find checked products and calculate the total
+        document
+          .querySelectorAll('input[name="product"]:checked')
+          .forEach((checkbox) => {
+            const index = parseInt(checkbox.value);
+            const product = productData[index];
+            const productTotal = product.quantity * product.cost;
+            total += productTotal;
+
+            tableContent += `
+          <tr>
+            <td>${product.name}</td>
+            <td>${product.quantity}</td>
+            <td>${product.cost}</td>
+            <td>${productTotal}</td>
+          </tr>`;
+          });
+
+        tableContent += `</table>`;
+
+        // Display table only if any product is selected, otherwise show a message
+        if (total > 0) {
+          document.getElementById("productTable").innerHTML = tableContent;
+          document.form1.output_total.value = `Загальна сума: ${total} грн`;
+        } else {
+          alert("Виберіть хоча б один товар для обчислення.");
+          document.getElementById("productTable").innerHTML = "";
+          document.form1.output_total.value = "";
+        }
+      }
+
+      // Show selected product's quantity and cost in Form 2
+      function showProductDetails() {
+        const selectedProductIndex =
+          document.form2.product_name.selectedIndex - 1;
+
+        if (selectedProductIndex >= 0) {
+          const product = productData[selectedProductIndex];
+          document.form2.output_quantity.value = `Кількість: ${product.quantity} шт.`;
+          document.form2.output_cost.value = `Вартість: ${product.cost} грн`;
+        } else {
+          document.form2.output_quantity.value = "Товар не вибрано";
+          document.form2.output_cost.value = "";
+        }
+      }
+
+      // Calculate total cost for selected product in Form 2
+      function calculateForm2Total() {
+        const selectedProductIndex =
+          document.form2.product_name.selectedIndex - 1;
+
+        if (selectedProductIndex >= 0) {
+          const product = productData[selectedProductIndex];
+          const totalCost = product.quantity * product.cost;
+          document.form2.output_total.value = `Загальна сума: ${totalCost} грн`;
+        } else {
+          document.form2.output_total.value = "Спочатку виберіть товар";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Склад товарів</h1>
+
+    <!-- Form 1 -->
+    <form name="form1">
+      <fieldset>
+        <legend>Виберіть товар:</legend>
+        <label>
+          <input type="checkbox" name="product" value="0" /> Мишка
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" name="product" value="1" /> Іграшка
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" name="product" value="2" /> Ліхтар
+        </label>
+        <br /><br />
+
+        <input
+          type="button"
+          value="Обчислити загальну суму"
+          onclick="displayTableAndCalculateTotal()"
+        />
+        <br /><br />
+
+        <input
+          type="text"
+          size="70"
+          name="output_total"
+          placeholder="Загальна сума"
+          readonly
+        />
+      </fieldset>
+    </form>
+
+    <br />
+
+    <!-- Container to display the product table -->
+    <div id="productTable"></div>
+
+    <hr />
+
+    <!-- Form 2 -->
+    <h1>Інформація про товар</h1>
+    <form name="form2">
+      Виберіть товар:
+      <select name="product_name" onchange="showProductDetails()">
+        <option value="none">-- Виберіть товар --</option>
+        <option value="Мишка">Мишка</option>
+        <option value="Іграшка">Іграшка</option>
+        <option value="Ліхтар">Ліхтар</option>
+      </select>
+      <br /><br />
+
+      <input
+        type="text"
+        size="70"
+        name="output_quantity"
+        placeholder="Доступна кількість"
+        readonly
+      />
+      <br />
+      <input
+        type="text"
+        size="70"
+        name="output_cost"
+        placeholder="Вартість"
+        readonly
+      />
+      <br /><br />
+
+      <input
+        type="button"
+        value="Загальна сума"
+        onclick="calculateForm2Total()"
+      />
+      <br /><br />
+
+      <input
+        type="text"
+        size="70"
+        name="output_total"
+        placeholder="Загальна сума"
+        readonly
+      />
+    </form>
+
+    <br />
+    <a href="./lab1.html">Лабораторна 1</a>
+    <a href="../index.html">На головну</a>
+  </body>
+</html>
